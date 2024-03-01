@@ -8,6 +8,7 @@ const noteSchema = new Schema(
     },
     text: {
       type: String,
+      required: true,
     },
   },
   { timestamps: true }
