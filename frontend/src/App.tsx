@@ -1,9 +1,9 @@
-import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
-import { Note } from '@/models/note';
+import { Note as NoteModel } from '@/models/note';
+import NoteCard from '@/components/note-card';
 
 function App() {
-  const [notes, setNotes] = useState<Note[]>([]);
+  const [notes, setNotes] = useState<NoteModel[]>([]);
 
   useEffect(() => {
     async function fetchNotes() {
@@ -22,11 +22,13 @@ function App() {
   }, []);
 
   return (
-    <div>
-      <h1 className="text-5xl">React App</h1>
-      <Button>Click me</Button>
-      {JSON.stringify(notes)}
-    </div>
+    <main className="container">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-8">
+        {notes.map((note) => (
+          <NoteCard note={note} key={note._id} />
+        ))}
+      </div>
+    </main>
   );
 }
 
