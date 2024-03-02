@@ -30,7 +30,7 @@ const NoteCard = ({ note }: NoteCardProps) => {
       </CardHeader>
       <CardContent className="flex-1">
         <div>
-          <p className="whitespace-pre">{text}</p>
+          <p className="whitespace-pre text-wrap">{text}</p>
         </div>
       </CardContent>
       <CardFooter className="px-6 py-2 flex items-center border-t-2 border-t-[#c1860d]">
