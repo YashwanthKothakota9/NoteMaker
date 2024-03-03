@@ -8,10 +8,27 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { NoteForm } from './note-form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Note as NoteModel } from '@/models/note';
 
-const AddNoteDialog = ({ onSubmit }: { onSubmit: () => void }) => {
+interface AddNoteDialogProps {
+  onSubmit: () => void;
+  updateNote: NoteModel | null;
+  onUpdateNote: (note: NoteModel) => void;
+}
+
+const AddNoteDialog = ({
+  onSubmit,
+  updateNote,
+  onUpdateNote,
+}: AddNoteDialogProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  useEffect(() => {
+    if (updateNote) {
+      setDialogOpen(true);
+    }
+  }, [updateNote]);
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -31,7 +48,12 @@ const AddNoteDialog = ({ onSubmit }: { onSubmit: () => void }) => {
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <NoteForm closeForm={setDialogOpen} onFormSubmit={onSubmit} />
+          <NoteForm
+            closeForm={setDialogOpen}
+            onFormSubmit={onSubmit}
+            updateNote={updateNote}
+            onUpdateNote={onUpdateNote}
+          />
         </div>
       </DialogContent>
     </Dialog>

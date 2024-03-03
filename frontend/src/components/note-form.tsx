@@ -19,6 +19,9 @@ import * as NotesApi from '@/network/notes_api';
 import { useToast } from './ui/use-toast';
 import { formatDate } from '@/lib/utils';
 
+import { Note as NoteModel } from '@/models/note';
+import { useState } from 'react';
+
 const formSchema = z.object({
   title: z
     .string({ invalid_type_error: 'Title must be a string' })
@@ -31,38 +34,63 @@ const formSchema = z.object({
     .max(200, { message: 'Text must be at most 200 characters long' }),
 });
 
+interface NoteFormProps {
+  closeForm: (open: boolean) => void;
+  onFormSubmit: () => void;
+  updateNote: NoteModel | null;
+  onUpdateNote: (note: NoteModel) => void;
+}
+
 export function NoteForm({
   closeForm,
   onFormSubmit,
-}: {
-  closeForm: (open: boolean) => void;
-  onFormSubmit: () => void;
-}) {
+  updateNote,
+  onUpdateNote,
+}: NoteFormProps) {
+  const [isEditMode] = useState(!!updateNote);
+
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: '',
-      text: '',
+      title: updateNote?.title || '',
+      text: updateNote?.text || '',
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const newNote = await NotesApi.createNote(values);
-    if (newNote) {
-      toast({
-        title: 'Your note created successfully!!',
-        description: 'Created At: ' + formatDate(newNote.createdAt),
-      });
-      onFormSubmit();
+    if (isEditMode) {
+      const updatedNote = await NotesApi.updateNote(updateNote!._id, values);
+      if (updatedNote) {
+        onUpdateNote(updatedNote);
+        toast({
+          description: 'Note updated successfully!!',
+        });
+        // onFormSubmit();
+      } else {
+        toast({
+          variant: 'destructive',
+          description: 'Failed to update note',
+        });
+      }
     } else {
-      toast({
-        variant: 'destructive',
-        title: 'Something went wrong',
-        description: 'Please try again later.',
-      });
+      const newNote = await NotesApi.createNote(values);
+      if (newNote) {
+        toast({
+          title: 'Your note created successfully!!',
+          description: 'Created At: ' + formatDate(newNote.createdAt),
+        });
+        onFormSubmit();
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'Something went wrong',
+          description: 'Please try again later.',
+        });
+      }
     }
+    form.reset();
     closeForm(false);
   }
 
@@ -115,7 +143,8 @@ export function NoteForm({
           className="bg-[#3f2009] text-[#f9eb8f] hover:bg-[#804c13] hover:text-[#fbf7c6]"
         >
           {/* Save Note */}
-          {form.formState.isSubmitting ? 'Saving...' : 'Save Note'}
+          {/* {form.formState.isSubmitting ? 'Saving...' : 'Save Note'} */}
+          {isEditMode ? 'Update Note' : 'Save Note'}
         </Button>
       </form>
     </Form>

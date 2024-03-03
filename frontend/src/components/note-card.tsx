@@ -7,13 +7,23 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { formatDate } from '@/lib/utils';
+import { Pencil, Trash2 } from 'lucide-react';
 
 interface NoteCardProps {
   note: NoteModel;
+  onDeleteNote: (note: NoteModel) => void;
+  onUpdateNote: (note: NoteModel) => void;
 }
 
-const NoteCard = ({ note }: NoteCardProps) => {
+const NoteCard = ({ note, onDeleteNote, onUpdateNote }: NoteCardProps) => {
   const { title, text, createdAt, updatedAt } = note;
 
   let createdUpdatedText: string;
@@ -25,8 +35,37 @@ const NoteCard = ({ note }: NoteCardProps) => {
 
   return (
     <Card className="flex flex-col bg-[#f9eb8f] text-[#3f2009] border-l-[#c1860d] border-l-8">
-      <CardHeader className="flex justify-between">
+      <CardHeader className="flex flex-row justify-between items-center">
         <CardTitle>{title}</CardTitle>
+        <div className="flex flex-row gap-2">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Pencil
+                  className="w-4 h-4 cursor-pointer text-[#3f2009] hover:text-[#804c13]"
+                  onClick={() => onUpdateNote(note)}
+                />
+              </TooltipTrigger>
+              <TooltipContent className="bg-[#3f2009]">
+                <p className="text-[#f9eb8f]">Edit Note</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Trash2
+                  className="w-4 h-4 text-red-700 cursor-pointer hover:text-red-500"
+                  onClick={() => onDeleteNote(note)}
+                />
+              </TooltipTrigger>
+              <TooltipContent className="bg-[#3f2009]">
+                <p className="text-[#f9eb8f]">Delete Note</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
       </CardHeader>
       <CardContent className="flex-1">
         <div>
