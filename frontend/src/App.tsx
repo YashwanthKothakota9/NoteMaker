@@ -4,9 +4,12 @@ import NoteCard from '@/components/note-card';
 import * as NotesApi from '@/network/notes_api';
 import AddNoteDialog from './components/add-note-dialog';
 import { toast } from './components/ui/use-toast';
+import { Loader, XCircle } from 'lucide-react';
 
 function App() {
   const [notes, setNotes] = useState<NoteModel[]>([]);
+  const [notesLoading, setNotesLoading] = useState(true);
+  const [notesError, setNotesError] = useState<Error | null>(null);
   const [updateNote, setUpdateNote] = useState<NoteModel | null>(null);
 
   useEffect(() => {
@@ -15,14 +18,19 @@ function App() {
 
   async function fetchNotes() {
     try {
+      setNotesLoading(true);
+      setNotesError(null);
       const data = await NotesApi.fetchNotes();
       setNotes(data);
     } catch (error) {
+      setNotesError(error as Error);
       console.error(error);
       toast({
         variant: 'destructive',
         description: 'Failed to fetch notes',
       });
+    } finally {
+      setNotesLoading(false);
     }
   }
 
@@ -42,24 +50,6 @@ function App() {
     }
   }
 
-  // async function updateNote(noteId: string, note: NoteModel) {
-  //   try {
-  //     const newNote = await NotesApi.updateNote(noteId, note);
-  //     setNotes((prevNotes) =>
-  //       prevNotes.map((n) => (n._id === noteId ? newNote : n))
-  //     );
-  //     toast({
-  //       description: 'Note updated successfully!!',
-  //     });
-  //   } catch (error) {
-  //     console.error(error);
-  //     toast({
-  //       variant: 'destructive',
-  //       description: 'Failed to update note',
-  //     });
-  //   }
-  // }
-
   function onUpdateNote(note: NoteModel) {
     setNotes((prevNotes) =>
       prevNotes.map((n) => (n._id === note._id ? note : n))
@@ -69,6 +59,26 @@ function App() {
   const refetchNotes = () => {
     fetchNotes();
   };
+
+  if (notesLoading) {
+    return (
+      <div className="flex items-center justify-center gap-2 border border-[#3f2009] bg-[#f9eb8f] p-4 m-2 rounded-md">
+        <Loader className="w-4 h-4 text-[#3f2009] animate-spin" />
+        <p className="text-[#3f2009]">Loading...</p>
+      </div>
+    );
+  }
+
+  if (notesError) {
+    return (
+      <div className="flex items-center justify-center gap-2 border border-red-400 bg-red-300 p-4 m-2 rounded-md">
+        <XCircle className="w-4 h-4 text-red-500" />
+        <p className="text-red-500">
+          Something went wrong, please try again later.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <main className="container">
