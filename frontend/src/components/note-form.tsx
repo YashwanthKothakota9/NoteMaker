@@ -141,6 +141,7 @@ export function NoteForm({
         <Button
           type="submit"
           className="bg-[#3f2009] text-[#f9eb8f] hover:bg-[#804c13] hover:text-[#fbf7c6]"
+          disabled={form.formState.isSubmitting}
         >
           {/* Save Note */}
           {/* {form.formState.isSubmitting ? 'Saving...' : 'Save Note'} */}
