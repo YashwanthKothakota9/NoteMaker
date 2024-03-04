@@ -1,9 +1,10 @@
+import * as NotesApi from '@/network/notes_api';
 import { useEffect, useState } from 'react';
 import NavBar from './components/navbar';
 import { User } from './models/user';
-import * as NotesApi from '@/network/notes_api';
-import NotesPageLoggedInView from './components/notes-page-logged-in-view';
-import NotesPageLoggedOutView from './components/notes-page-logged-out-view';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import NotesPage from './pages/notes-page';
+import PageNotFound from './pages/page-not-found';
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
@@ -21,16 +22,19 @@ function App() {
   }, []);
 
   return (
-    <>
+    <BrowserRouter>
       <NavBar
         loggedInUser={loggedInUser}
         setLoggedInUser={setLoggedInUser}
         onLogoutSuccessful={() => setLoggedInUser(null)}
       />
       <main className="container">
-        {loggedInUser ? <NotesPageLoggedInView /> : <NotesPageLoggedOutView />}
+        <Routes>
+          <Route path="/" element={<NotesPage loggedInUser={loggedInUser} />} />
+          <Route path="/*" element={<PageNotFound />} />
+        </Routes>
       </main>
-    </>
+    </BrowserRouter>
   );
 }
 

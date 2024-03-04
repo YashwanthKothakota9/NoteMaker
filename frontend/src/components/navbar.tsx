@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import logo from '../../public/logos/logo-base-256x256.png';
+import logo from '/logos/logo-base-256x256.png';
 import { Button } from './ui/button';
 import SignUpModel from './signup-model';
 import LoginModel from './login-model';
 import { User } from '@/models/user';
 import { useToast } from './ui/use-toast';
 import * as NotesApi from '@/network/notes_api';
+import { Link } from 'react-router-dom';
 
 interface NavBarProps {
   loggedInUser: User | null;
@@ -43,14 +44,14 @@ const NavBar = ({
     <>
       <div className="flex items-center justify-between bg-[#f9eb8f] p-8">
         <div>
-          <a href="/" className="flex gap-2">
+          <Link to="/" className="flex gap-2">
             <img src={logo} alt="logo" className="w-10 h-10" />
             <h1 className="text-[#3f2009] text-bold text-3xl">NoteMaker</h1>
-          </a>
+          </Link>
         </div>
         {loggedInUser ? (
           <div className="flex gap-2 items-center justify-center">
-            <p className="text-[#3f2009] text-lg">
+            <p className="text-[#3f2009] text-lg pr-2">
               Welcome, {loggedInUser.username}
             </p>
             <Button
