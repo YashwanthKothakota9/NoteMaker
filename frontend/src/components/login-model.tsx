@@ -26,6 +26,7 @@ import {
 
 import { useToast } from './ui/use-toast';
 import { User } from '@/models/user';
+import { UnauthorizedError } from '@/errors/http-errors';
 
 const formSchema = z.object({
   username: z
@@ -68,10 +69,20 @@ const LoginModel = ({
         description: 'Logged in successfully!!',
       });
     } catch (error) {
-      toast({
-        variant: 'destructive',
-        description: 'Failed to log in, Please try again later',
-      });
+      if (error instanceof UnauthorizedError) {
+        toast({
+          variant: 'destructive',
+          title: 'Failed to log in, Please try again later',
+          description: error.message,
+        });
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'Failed to log in, Please try again later',
+          description: 'Something went wrong',
+        });
+      }
+
       console.error(error);
     } finally {
       form.reset();

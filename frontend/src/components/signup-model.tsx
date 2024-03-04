@@ -26,6 +26,7 @@ import {
 
 import { useToast } from './ui/use-toast';
 import { User } from '@/models/user';
+import { ConflictError } from '@/errors/http-errors';
 
 const formSchema = z
   .object({
@@ -94,10 +95,20 @@ const SignUpModel = ({
         description: 'Signed up successfully!!',
       });
     } catch (error) {
-      toast({
-        variant: 'destructive',
-        description: 'Failed to sign up, Please try again later',
-      });
+      if (error instanceof ConflictError) {
+        toast({
+          variant: 'destructive',
+          title: 'Failed to sign up, Please try again later',
+          description: error.message,
+        });
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'Failed to sign up, Please try again later',
+          description: 'Something went wrong',
+        });
+      }
+
       console.error(error);
     } finally {
       form.reset();
