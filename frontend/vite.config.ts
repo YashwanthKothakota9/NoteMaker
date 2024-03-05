@@ -5,7 +5,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   server: {
     proxy: {
-      '/api': 'https://notemaker-csh6.onrender.com',
+      '/api': 'https://notemaker-j6ki.onrender.com/',
     },
   },
   plugins: [react()],
