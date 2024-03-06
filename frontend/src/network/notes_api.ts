@@ -5,22 +5,16 @@ import { User } from '@/models/user';
 async function fetchData(input: RequestInfo, init?: RequestInit) {
   const response = await fetch(input, init);
   if (response.ok) {
-    // console.log(response);
     return response;
   } else {
-    const errorBody = await response.json();
-    const errorMessage = errorBody.error;
+    // const errorBody = await response.json();
+    // const errorMessage = errorBody.error;
     if (response.status === 401) {
-      throw new UnauthorizedError(errorMessage);
+      throw new UnauthorizedError();
     } else if (response.status === 409) {
-      throw new ConflictError(errorMessage);
+      throw new ConflictError();
     } else {
-      throw Error(
-        'Request failed with status: ' +
-          response.status +
-          ' message: ' +
-          errorMessage
-      );
+      throw Error('Request failed with status: ' + response.status);
     }
   }
 }

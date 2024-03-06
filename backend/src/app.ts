@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express, { NextFunction, Request, Response } from 'express';
 import notesRoutes from './routes/notes.route';
 import userRoutes from './routes/users.route';
+import cors from 'cors';
 
 import morgan from 'morgan';
 import createHttpError, { isHttpError } from 'http-errors';
@@ -11,6 +12,8 @@ import MongoStore from 'connect-mongo';
 import { requiresAuth } from './middlewares/auth';
 
 const app = express();
+
+app.use(cors());
 
 app.use(morgan('dev'));
 
