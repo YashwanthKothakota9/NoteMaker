@@ -8,8 +8,7 @@
 </div>
 
 <div align='center'>
-    <a href="https://twitter.com/Yashcsp22"><img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/Yashcsp22
-    "></a>
+    <a href="https://twitter.com/Yashcsp22"><img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/Yashcsp22"></a>
 </div>
 
 <br/>
