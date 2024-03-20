@@ -23,6 +23,8 @@ NoteMaker is a personalized note taking app with an information of upto 500 word
 
 ## Demo
 
+![Notemaker Welcome GIF](.github/images/Notemaker.gif)
+
 ## Tech Stack
 
 - [React](https://react.dev/) - Library for Frontend
